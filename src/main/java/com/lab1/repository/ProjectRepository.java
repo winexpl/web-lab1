@@ -10,6 +10,6 @@ public interface ProjectRepository {
     Project update(Project project);
     void remove(int id);
     Project findById(int id);
-    List<Project> findByRangeOfDates(Date start_date, Date end_date);
+    List<Project> findByRangeOfDates(String start_date, String end_date);
     List<Project> findAll();
 }

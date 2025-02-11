@@ -42,27 +42,46 @@ public class JdbcProjectRepository implements ProjectRepository {
 
     @Override
     public Project update(Project project) {
-        throw new UnsupportedOperationException("Unimplemented method 'update'");
+        String sqlRequest = "UPDATE project " + //
+                        "SET p_name=?, p_descr=?, p_begin_date=?, p_end_date=? " + //
+                        "WHERE p_id=?; ";
+        jdbcTemplate.update(sqlRequest, 
+            project.getName(),
+            project.getDescr(),
+            project.getBeginDate(),
+            project.getEndDate(),
+            project.getId());
+        
+        //throw new UnsupportedOperationException("Unimplemented method 'update'");
+        return project;
     }
 
     @Override
     public void remove(int id) {
-        throw new UnsupportedOperationException("Unimplemented method 'remove'");
+        String sqlRequest = "DELETE FROM project WHERE p_id=?";
+        jdbcTemplate.update(sqlRequest, id);
     }
 
     @Override
     public Project findById(int id) {
-        throw new UnsupportedOperationException("Unimplemented method 'findById'");
+        String sqlRequest = "SELECT * FROM project WHERE p_id=?";
+        Project project = this.jdbcTemplate.queryForObject(sqlRequest, projectMapper, id);
+        return project;
     }
 
     @Override
-    public List<Project> findByRangeOfDates(Date startDate, Date end_date) {
-        throw new UnsupportedOperationException("Unimplemented method 'findByRangeOfDates'");
+    public List<Project> findByRangeOfDates(String start_date, String end_date) {
+        String sqlRequest = "SELECT * FROM project WHERE " +
+            "(p_begin_date BETWEEN CAST(? AS DATE) AND CAST(? AS DATE)) " +
+            "AND (p_end_date BETWEEN CAST(? AS DATE) AND CAST(? AS DATE))";
+        List<Project> project = this.jdbcTemplate.query(sqlRequest, projectMapper, start_date, end_date, start_date, end_date);
+        return project;
     }
 
     @Override
     public List<Project> findAll() {
-        return jdbcTemplate.query("select * from project", projectMapper);
+        String sqlRequest = "SELECT * FROM project";
+        return jdbcTemplate.query(sqlRequest, projectMapper);
     }
     
 }

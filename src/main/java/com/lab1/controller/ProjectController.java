@@ -3,6 +3,7 @@ package com.lab1.controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.lab1.entity.Project;
@@ -15,7 +16,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import java.util.Date;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,6 +35,7 @@ public class ProjectController {
 
     @PutMapping("/projects/{id}")
     public Project update(@PathVariable int id, @RequestBody Project project) {
+        project.setId(id);
         return projectRepository.update(project);
     }
 
@@ -48,8 +49,9 @@ public class ProjectController {
         return projectRepository.findById(id);
     }
 
-    @GetMapping("/projects?start_date={start_date}&end_date={end_date}")
-    List<Project> findByRangeOfDates(Date start_date, Date end_date) {
+    @GetMapping("/projects")
+    List<Project> findByRangeOfDates(@RequestParam String start_date, @RequestParam String end_date) {
+        
         return projectRepository.findByRangeOfDates(start_date, end_date);
     }
 
