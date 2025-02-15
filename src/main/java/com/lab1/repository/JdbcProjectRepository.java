@@ -30,12 +30,16 @@ public class JdbcProjectRepository implements ProjectRepository {
 
     @Override
     public Project save(Project project) {
+        System.out.println(project.getId());
         String sqlRequest = "INSERT INTO project (p_name, p_descr, p_begin_date, p_end_date) VALUES (?, ?, ?, ?) RETURNING p_id";
-        int id = jdbcTemplate.queryForObject(sqlRequest, Integer.class,
+        var id = jdbcTemplate.queryForObject(sqlRequest, Integer.class,
             project.getName(),
             project.getDescr(),
             project.getBeginDate(),
-            project.getEndDate()).intValue();
+            project.getEndDate());
+        if(id == null) {
+            throw new IllegalStateException("The query returned null ID for the project.");
+        }
         project.setId(id);
         return project;
     }

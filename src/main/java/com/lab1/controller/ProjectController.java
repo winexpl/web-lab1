@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.lab1.entity.Project;
 import com.lab1.repository.ProjectRepository;
+import com.lab1.service.ProjectService;
 
 import lombok.AllArgsConstructor;
 
@@ -26,38 +27,36 @@ import org.springframework.web.bind.annotation.GetMapping;
 @RequestMapping("/api")
 @AllArgsConstructor
 public class ProjectController {
-    private ProjectRepository projectRepository;
-
+    ProjectService projectService;
     @PostMapping("/projects")
     Project save(@RequestBody Project project) {
-        return projectRepository.save(project);
+        return projectService.save(project);
     }
 
     @PutMapping("/projects/{id}")
     public Project update(@PathVariable int id, @RequestBody Project project) {
         project.setId(id);
-        return projectRepository.update(project);
+        return projectService.update(project);
     }
 
     @DeleteMapping("/projects/{id}")
     public void remove(@PathVariable int id) {
-        projectRepository.remove(id);
+        projectService.remove(id);
     }
 
     @GetMapping("/projects/{id}")
     public Project findById(@PathVariable int id) {
-        return projectRepository.findById(id);
+        return projectService.findById(id);
     }
 
     @GetMapping("/projects")
     List<Project> findByRangeOfDates(@RequestParam String start_date, @RequestParam String end_date) {
-        
-        return projectRepository.findByRangeOfDates(start_date, end_date);
+        return projectService.findByRangeOfDates(start_date, end_date);
     }
 
     @GetMapping("/projects/all")
     public List<Project> findAll() {
-        return projectRepository.findAll();
+        return projectService.findAll();
     }
     
 }
