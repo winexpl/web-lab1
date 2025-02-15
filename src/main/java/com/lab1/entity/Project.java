@@ -1,6 +1,6 @@
 package com.lab1.entity;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -11,6 +11,6 @@ public class Project {
     private int id;
     private String name;
     private String descr;
-    private Date beginDate;
-    private Date endDate;
+    private LocalDate beginDate;
+    private LocalDate endDate;
 }

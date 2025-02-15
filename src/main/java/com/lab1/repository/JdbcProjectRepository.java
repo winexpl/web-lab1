@@ -1,5 +1,6 @@
 package com.lab1.repository;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -23,8 +24,10 @@ public class JdbcProjectRepository implements ProjectRepository {
         project.setId(rs.getInt("p_id"));
         project.setName(rs.getString("p_name"));
         project.setDescr(rs.getString("p_descr"));
-        project.setBeginDate(rs.getDate("p_begin_date"));
-        project.setEndDate(rs.getDate("p_end_date"));
+        var beginDate = rs.getDate("p_begin_date");
+        project.setBeginDate(beginDate != null ? beginDate.toLocalDate() : null);
+        var endDate = rs.getDate("p_begin_date");
+        project.setEndDate(endDate != null ? endDate.toLocalDate() : null);
         return project;
     };
 
@@ -45,39 +48,39 @@ public class JdbcProjectRepository implements ProjectRepository {
     }
 
     @Override
-    public Project update(Project project) {
+    public int update(Project project) {
         String sqlRequest = "UPDATE project " + //
                         "SET p_name=?, p_descr=?, p_begin_date=?, p_end_date=? " + //
                         "WHERE p_id=?; ";
-        jdbcTemplate.update(sqlRequest, 
+        return jdbcTemplate.update(sqlRequest,
             project.getName(),
             project.getDescr(),
             project.getBeginDate(),
             project.getEndDate(),
             project.getId());
-        
-        //throw new UnsupportedOperationException("Unimplemented method 'update'");
-        return project;
     }
 
     @Override
-    public void remove(int id) {
+    public int remove(int id) {
         String sqlRequest = "DELETE FROM project WHERE p_id=?";
-        jdbcTemplate.update(sqlRequest, id);
+        return jdbcTemplate.update(sqlRequest, id);
     }
 
     @Override
     public Project findById(int id) {
         String sqlRequest = "SELECT * FROM project WHERE p_id=?";
-        Project project = this.jdbcTemplate.queryForObject(sqlRequest, projectMapper, id);
-        return project;
+        try {
+            return this.jdbcTemplate.queryForObject(sqlRequest, projectMapper, id);
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     @Override
-    public List<Project> findByRangeOfDates(String start_date, String end_date) {
+    public List<Project> findByRangeOfDates(LocalDate start_date, LocalDate end_date) {
         String sqlRequest = "SELECT * FROM project WHERE " +
-            "(p_begin_date BETWEEN CAST(? AS DATE) AND CAST(? AS DATE)) " +
-            "AND (p_end_date BETWEEN CAST(? AS DATE) AND CAST(? AS DATE))";
+            "(p_begin_date BETWEEN ? AND ?) " +
+            "AND (p_end_date BETWEEN ? AND ?)";
         List<Project> project = this.jdbcTemplate.query(sqlRequest, projectMapper, start_date, end_date, start_date, end_date);
         return project;
     }
@@ -85,7 +88,7 @@ public class JdbcProjectRepository implements ProjectRepository {
     @Override
     public List<Project> findAll() {
         String sqlRequest = "SELECT * FROM project";
-        return jdbcTemplate.query(sqlRequest, projectMapper);
+        return namedParameterJdbcTemplate.query(sqlRequest, projectMapper);
     }
     
 }

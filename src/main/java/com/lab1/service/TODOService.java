@@ -1,5 +1,6 @@
 package com.lab1.service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +10,7 @@ import com.lab1.entity.Project;
 import com.lab1.repository.ProjectRepository;
 
 @Service
-public class ProjectService {
+public class TODOService {
     @Autowired
     private ProjectRepository projectRepository;
 
@@ -17,19 +18,19 @@ public class ProjectService {
         return projectRepository.save(project);
     }
 
-    public Project update(Project project) {
+    public int update(Project project) {
         return projectRepository.update(project);
     }
 
-    public void remove(int id) {
-        projectRepository.remove(id);
+    public int remove(int id) {
+        return projectRepository.remove(id);
     }
 
     public Project findById(int id) {
         return projectRepository.findById(id);
     }
 
-    public List<Project> findByRangeOfDates(String start_date, String end_date) {
+    public List<Project> findByRangeOfDates(LocalDate start_date, LocalDate end_date) {
         return projectRepository.findByRangeOfDates(start_date, end_date);
     }
 
