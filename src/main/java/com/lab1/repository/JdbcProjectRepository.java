@@ -44,6 +44,7 @@ public class JdbcProjectRepository implements ProjectRepository {
             project.getBeginDate(),
             project.getEndDate()).intValue();
         project.setId(id);
+        
         return project;
     }
 
