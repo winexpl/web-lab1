@@ -1,6 +1,7 @@
 package com.lab1.repository;
 
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -62,8 +63,8 @@ public class JdbcProjectRepository implements ProjectRepository {
 
     @Override
     public int remove(int id) {
-        String sqlRequest = "DELETE FROM project WHERE p_id=?";
-        return jdbcTemplate.update(sqlRequest, id);
+        String sqlRequest = "DELETE FROM project WHERE p_id=:id";
+        return namedParameterJdbcTemplate.update(sqlRequest, Collections.singletonMap("id", id));
     }
 
     @Override
